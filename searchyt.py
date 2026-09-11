@@ -3,9 +3,12 @@
 # qwen_py_ytsearch.py
 import yt_dlp
 import pyperclip
-import sys
+import config as cfg
 
-from qwen_ytdownloadermain import main as downloader
+from download_quick import quickie
+from download_with_options import quickie as custom
+
+usequick = False
 
 def search_youtube(query, max_results=10):
     ydl_opts = {
@@ -21,31 +24,33 @@ def search_youtube(query, max_results=10):
             result = ydl.extract_info(search_url, download=False)
             return result.get('entries', [])
         except Exception as e:
-            print(f"❌ Search failed: {str(e)}")
+            print(f"ಠ_ಠ Search failed: {str(e)}")
             return []
 
 def main():
     leaveme = False
+
     while not leaveme:
-        print("🔍 YouTube Video Search Tool")
-        print("💡 Enter a search query to find videos\n")
+        print("YouTube Video Search Tool")
+        print("Enter a search query to find videos\n")
 
         while True:
-            query = input("🔎 Search YouTube: ").strip()
+            query = input("-> Search YouTube: ").strip()
             if not query:
-                print("⚠️ Please enter a valid query.\n")
+                print("-> Please enter a valid query.\n")
                 continue
             break
 
-        print(f"\n🔄 Searching for: '{query}'...\n")
+        print(f"\nSearching for: '{query}'...\n")
         results = search_youtube(query, max_results=10)
 
         if not results:
-            print("❌ No results found. Check your internet or try another query.")
+            print("ಠ_ಠ No results found. Check your internet or try another query.")
             return
 
-        print("📋 Search Results:")
-        print("-" * 80)
+        print("^_^ Search Results:")
+        print("-" * 96)
+
         for idx, video in enumerate(results, start=1):
             title = video.get('title', 'No Title')
             duration = video.get('duration', 0)
@@ -63,39 +68,43 @@ def main():
         # Let user choose
         while True:
             try:
-                choice = input(f"🎯 Select video (1-{len(results)}) or 'b' to go back: ").strip()
+                choice = input(f"-> Select video {cfg.fr_yellow}(1-{len(results)}){cfg.fr_reset} or 'b' to go back: ").strip()
                 if choice.lower() == 'b':
-                    print("👋 Exiting search...")
+                    print("-> Exiting search...")
                     return
                 idx = int(choice) - 1
                 if 0 <= idx < len(results):
                     selected = results[idx]
                     break
                 else:
-                    print(f"❌ Please enter a number between 1 and {len(results)}.")
+                    print(f"-> Please enter a number between 1 and {len(results)}.")
             except ValueError:
-                print("❌ Invalid input. Enter a number.")
+                print("-> Invalid input. Enter a number.")
 
         video_url = f"https://www.youtube.com/watch?v={selected['id']}"
 
         # Copy to clipboard
-        pyperclip.copy(video_url)
-        print(f"\n✅ URL copied to clipboard:")
-        print(f"📋 {video_url}")
+        # pyperclip.copy(video_url)
+        # print(f"\n-> URL copied to clipboard:")
+        print(f"->{cfg.fr_green}URL:{cfg.fr_reset} {video_url}")
 
-        print("paste the link below to download")
+        npt = input('\ndo you want customizable downloads? (y/n): ')
+        usequick = npt in cfg.agreeList
 
-        downloader()
+        if(usequick):
+            custom(video_url)
+        else:
+            quickie(video_url)
 
-        leavethis = input("search again (y/n): ")
+        leavethis = input("-> search again (y/n): ")
 
         leaveme = leavethis == "n"
 
         """
-        print(f"📍 Now open 'qwen_py_ytdownloadermain.py' and paste the link to download.")
+        print(f"Now open 'qwen_py_ytdownloadermain.py' and paste the link to download.")
 
         # Optional: auto launch the main downloader
-        launch = input("\n🚀 Press Enter to launch the downloader now, or 'n' to exit: ").strip()
+        launch = input("\nPress Enter to launch the downloader now, or 'n' to exit: ").strip()
         if launch.lower() != 'n':
             import subprocess
             subprocess.run([sys.executable, "qwen_py_ytdownloadermain.py"])

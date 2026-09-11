@@ -1,12 +1,13 @@
-# Mostly AI slop
-
 import sys
 import yt_dlp
 import os
 from datetime import datetime
+import config as cfg
 
-DOWNLOAD_FOLDER = "ytdowns"
+DOWNLOAD_FOLDER = cfg.DOWNLOAD_FOLDER
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
+
+my_url = ''
 
 def get_output_filename(template):
     safe_title = "".join(c for c in template if c.isalnum() or c in (' ', '-', '_')).strip()
@@ -36,36 +37,14 @@ def hook(d):
         bar = "█" * filled + "░" * (bar_length - filled)
 
         sys.stdout.write(f"\r{bar} {percent:5.1f}% | {downloaded_mb:.1f}/{total_mb:.1f} MB | "
-                         f"{speed_mbps:.1f} MB/s | ETA {mins:02d}:{secs:02d}      ")
+                        f"{speed_mbps:.1f} MB/s | ETA {mins:02d}:{secs:02d}      ")
         sys.stdout.flush()
 
     elif d['status'] == 'finished':
-        print("\n✅ Download completed, now converting...")
+        print("\n-> Download completed, now converting...")
 
 def download_video(url):
-    # doesnt work
-    # ydl_opts = {
-    #     'format': 'best[ext=mp4]',
-    #     'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
-    #     'progress_hooks': [hook],
-    # }
-
-    # works but the format is sometimes not available
-    # ydl_opts = {
-    #     'format': 'best[ext=mp4]',
-    #     'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
-    #     'progress_hooks': [hook],
-    #     # 'cookiesfrombrowser': ('chrome',), # <--- Add this line (use 'firefox', 'edge', etc. if needed)
-    #     'cookiefile': 'cookies.txt',
-    # }
-
-    ydl_opts = {
-        'format': 'bestvideo+bestaudio/best', # Grabs best video and best audio separately
-        'merge_output_format': 'mp4',         # Glues them together into an MP4
-        'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
-        'progress_hooks': [hook],
-        'cookiefile': 'runtime/cookies.txt',          # Keep your cookie fix!
-    }
+    ydl_opts = cfg.gen_opts_nermal(hook)
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
@@ -79,25 +58,40 @@ def download_video(url):
 
         if os.path.exists(old_file):
             os.rename(old_file, new_file)
-            print(f"💾 Saved as: {new_filename}")
+            print(f"-> Saved as: {new_filename}")
 
 def main():
-    print("YouTube Downloader (yt-dlp)")
+    global my_url
+
+    print(f"YouTube Downloader {cfg.fr_green}[quick n easy]{cfg.fr_reset}")
+    print(cfg.saveInform)
     while True:
-        url = input("\n🔗 Enter YouTube URL (or 'quit' to exit): ").strip()
-        if not url or url.lower() in ['quit', 'exit', 'q']:
-            print("👋 Goodbye!")
+        if my_url == '':
+            url = input("\n-> Enter YouTube URL (or 'quit' to exit): ").strip()
+        else:
+            url = my_url
+            my_url = ''
+
+        if not url or url.lower() in cfg.leaveList:
+            print(cfg.leaveTxt)
             break
 
         try:
             download_video(url)
         except Exception as e:
-            print(f"\n❌ Error: {str(e)}")
+            print(f"\n\t-> Error: {str(e)}")
 
-        again = input("\n🔁 Download another? (y/n): ").strip().lower()
-        if again not in ['y', 'yes']:
-            print("👋 Goodbye!")
+        again = input("\n-> Download another? (y/n): ").strip().lower()
+        if again not in cfg.agreeList:
+            print(cfg.leaveTxt)
             break
+
+def quickie(url):
+    global my_url
+
+    my_url = url
+    main()
+    return True
 
 if __name__ == "__main__":
     main()
