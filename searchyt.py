@@ -24,7 +24,7 @@ def search_youtube(query, max_results=10):
             result = ydl.extract_info(search_url, download=False)
             return result.get('entries', [])
         except Exception as e:
-            print(f"❌ Search failed: {str(e)}")
+            print(f"ಠ_ಠ Search failed: {str(e)}")
             return []
 
 def main():
@@ -41,7 +41,7 @@ def main():
                 continue
             break
 
-        print(f"\n⁕ Searching for: '{query}'...\n")
+        print(f"\nSearching for: '{query}'...\n")
         results = search_youtube(query, max_results=10)
 
         if not results:
@@ -88,7 +88,7 @@ def main():
         # print(f"\n-> URL copied to clipboard:")
         print(f"->{cfg.fr_green}URL:{cfg.fr_reset} {video_url}")
 
-        npt = input('\ndo you want customizable downloads? (y/n)')
+        npt = input('\ndo you want customizable downloads? (y/n): ')
         usequick = npt in cfg.agreeList
 
         if(usequick):
