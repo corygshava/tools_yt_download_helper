@@ -35,11 +35,11 @@ def hook(d):
         bar = "█" * filled + "░" * (bar_length - filled)
 
         sys.stdout.write(f"\r{bar} {percent:5.1f}% | {downloaded_mb:.1f}/{total_mb:.1f} MB | "
-                         f"{speed_mbps:.1f} MB/s | ETA {mins:02d}:{secs:02d}      ")
+                        f"{speed_mbps:.1f} MB/s | ETA {mins:02d}:{secs:02d}      ")
         sys.stdout.flush()
 
     elif d['status'] == 'finished':
-        print("\n✅ Download completed, now converting...")
+        print("\n-> Download completed, now converting...")
 
 def download_video(url):
     ydl_opts = cfg.gen_opts_nermal(hook)
@@ -69,7 +69,7 @@ def main():
         try:
             download_video(url)
         except Exception as e:
-            print(f"\nError: {str(e)}")
+            print(f"\n-> Error: {str(e)}")
 
         again = input("\n-> Download another? (y/n): ").strip().lower()
         if again not in cfg.agreeList:
