@@ -1,5 +1,3 @@
-# Mostly AI slop
-
 import sys
 import yt_dlp
 import os
@@ -72,10 +70,18 @@ def show_format_menu(formats, title):
 
 
 def download_with_choice(url):
+    # old format (doesnt work anyway)
+    # ydl_opts = {
+    #     'quiet': True,
+    #     'format': 'bestaudio/best',  # Just to fetch info
+    #     'noplaylist': True,
+    # }
+
     ydl_opts = {
         'quiet': True,
-        'format': 'bestaudio/best',  # Just to fetch info
+        'format': 'bestvideo+bestaudio/best',  # Allows seeing combined and mergeable formats
         'noplaylist': True,
+        'cookiefile': 'cookies.txt',           # Prevents 403 / DPAPI errors
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -168,7 +174,7 @@ def download_hook(d, filename):
 
 
 def main():
-    print("🎥 YouTube Quality Selector (yt-dlp)")
+    print("YouTube Quality Selector (yt-dlp)")
     print("📁 Videos saved to: ./ytdowns")
 
     while True:
