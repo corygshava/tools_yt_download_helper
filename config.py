@@ -6,8 +6,9 @@ COOKIE_FILE = "runtime/cookies.txt"
 
 # runtime stuff
 leaveList = ['quit', 'exit', 'q','leave','nope','no','fuck off']
-leaveTxt = "\nGoodbye, see you soon :)"
+leaveTxt = "\nGoodbye, see you soon :)\n"
 agreeList = ['y', 'yes','fuck yeah','yeah','ok']
+saveInform = f"videos saved to ./{DOWNLOAD_FOLDER}"
 
 # terminal colors
 from colorama import  init, Fore, Back, Style
@@ -30,3 +31,12 @@ def gen_opts_nermal(h):
 		'progress_hooks': [h],
 		'cookiefile': COOKIE_FILE, 					# Keep your cookie fix!
 	}
+
+def gen_opts_options():
+	 # old format (doesnt work anyway)
+	return {
+        'quiet': True,
+        'format': 'bestvideo+bestaudio/best',  # Allows seeing combined and mergeable formats
+        'noplaylist': True,
+        'cookiefile': 'cookies.txt',           # Prevents 403 / DPAPI errors
+    }

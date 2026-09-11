@@ -59,7 +59,8 @@ def download_video(url):
             print(f"-> Saved as: {new_filename}")
 
 def main():
-    print(f"YouTube Downloader [quick n easy]")
+    print(f"YouTube Downloader {cfg.fr_green}[quick n easy]{cfg.fr_reset}")
+    print(cfg.saveInform)
     while True:
         url = input("\n-> Enter YouTube URL (or 'quit' to exit): ").strip()
         if not url or url.lower() in cfg.leaveList:
@@ -69,7 +70,7 @@ def main():
         try:
             download_video(url)
         except Exception as e:
-            print(f"\n-> Error: {str(e)}")
+            print(f"\n\t-> Error: {str(e)}")
 
         again = input("\n-> Download another? (y/n): ").strip().lower()
         if again not in cfg.agreeList:
