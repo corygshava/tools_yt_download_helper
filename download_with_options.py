@@ -8,6 +8,7 @@ import config as cfg
 # Create download folder
 DOWNLOAD_FOLDER = "ytdowns"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
+my_url = ''
 
 def get_readable_size(bytes_val):
 	"""Convert bytes to human-readable format"""
@@ -172,11 +173,18 @@ def download_hook(d, filename):
 
 
 def main():
+	global my_url
+
 	print(f"YouTube Downloader {cfg.fr_yellow}(customized download){cfg.fr_reset}")
 	print(cfg.saveInform)
 
 	while True:
-		url = input("\n\t-> Enter YouTube URL (or 'quit' to exit): ").strip()
+		if my_url == '':
+			url = input("\n-> Enter YouTube URL (or 'quit' to exit): ").strip()
+		else:
+			url = my_url
+			my_url = ''
+
 		if not url or url.lower() in cfg.leaveList:
 			print(cfg.leaveTxt)
 			break
@@ -188,6 +196,13 @@ def main():
 			print(cfg.leaveTxt)
 			break
 
+
+def quickie(url):
+    global my_url
+
+    my_url = url
+    main()
+    return True
 
 if __name__ == "__main__":
 	main()

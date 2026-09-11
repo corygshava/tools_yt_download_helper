@@ -7,6 +7,8 @@ import config as cfg
 DOWNLOAD_FOLDER = cfg.DOWNLOAD_FOLDER
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
+my_url = ''
+
 def get_output_filename(template):
     safe_title = "".join(c for c in template if c.isalnum() or c in (' ', '-', '_')).strip()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -59,10 +61,17 @@ def download_video(url):
             print(f"-> Saved as: {new_filename}")
 
 def main():
+    global my_url
+
     print(f"YouTube Downloader {cfg.fr_green}[quick n easy]{cfg.fr_reset}")
     print(cfg.saveInform)
     while True:
-        url = input("\n-> Enter YouTube URL (or 'quit' to exit): ").strip()
+        if my_url == '':
+            url = input("\n-> Enter YouTube URL (or 'quit' to exit): ").strip()
+        else:
+            url = my_url
+            my_url = ''
+
         if not url or url.lower() in cfg.leaveList:
             print(cfg.leaveTxt)
             break
@@ -76,6 +85,13 @@ def main():
         if again not in cfg.agreeList:
             print(cfg.leaveTxt)
             break
+
+def quickie(url):
+    global my_url
+
+    my_url = url
+    main()
+    return True
 
 if __name__ == "__main__":
     main()
