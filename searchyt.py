@@ -1,3 +1,5 @@
+# Mostly AI slop
+
 # qwen_py_ytsearch.py
 import yt_dlp
 import pyperclip
