@@ -41,10 +41,28 @@ def hook(d):
         print("\n✅ Download completed, now converting...")
 
 def download_video(url):
+    # doesnt work
+    # ydl_opts = {
+    #     'format': 'best[ext=mp4]',
+    #     'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
+    #     'progress_hooks': [hook],
+    # }
+
+    # works but the format is sometimes not available
+    # ydl_opts = {
+    #     'format': 'best[ext=mp4]',
+    #     'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
+    #     'progress_hooks': [hook],
+    #     # 'cookiesfrombrowser': ('chrome',), # <--- Add this line (use 'firefox', 'edge', etc. if needed)
+    #     'cookiefile': 'cookies.txt',
+    # }
+
     ydl_opts = {
-        'format': 'best[ext=mp4]',
+        'format': 'bestvideo+bestaudio/best', # Grabs best video and best audio separately
+        'merge_output_format': 'mp4',         # Glues them together into an MP4
         'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
         'progress_hooks': [hook],
+        'cookiefile': 'runtime/cookies.txt',          # Keep your cookie fix!
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
