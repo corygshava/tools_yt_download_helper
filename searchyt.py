@@ -2,7 +2,7 @@
 
 # qwen_py_ytsearch.py
 import yt_dlp
-import pyperclip
+# import pyperclip
 import config as cfg
 
 from download_quick import quickie
